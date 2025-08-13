@@ -1,9 +1,7 @@
-import 'package:e_commerce_app/feature/home/presentation/views/widget/product_animated.dart';
+import 'package:e_commerce_app/feature/home/presentation/views/widget/product_added_widget.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/skeltonizer_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../domain/entity/image_entity.dart';
 import '../../manager/ecommerce_cubit.dart';
@@ -22,74 +20,73 @@ class HomeViewBodyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                ProductAnimated(imageList: imageList),
-                CustomSearchTextField(
-                  onChanged: (value) {
-                    BlocProvider.of<EcommerceCubit>(context).searchProduct(value);
-                  },
-                ),
-              ],
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              ProductAddedWidget(imageList: imageList),
+              CustomSearchTextField(
+                onChanged: (value) {
+                  BlocProvider.of<EcommerceCubit>(context).searchProduct(value);
+                },
+              ),
+            ],
           ),
         ),
-        BlocBuilder<EcommerceCubit, EcommerceState>(
-          builder: (context, state) {
-            if (state is EcommerceSuccessState) {
-              final products = state.cart;
+        Expanded(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              BlocBuilder<EcommerceCubit, EcommerceState>(
+                builder: (context, state) {
+                  if (state is EcommerceSuccessState) {
+                    final products = state.cart;
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                final cubit = context.read<EcommerceCubit>();
-                final index = cubit.scrollToCartIndex;
-                if (index != null) {
-                  _scrollController.animateTo(
-                    index * 300.0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              });
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final cubit = context.read<EcommerceCubit>();
+                      final index = cubit.scrollToCartIndex;
+                      if (index != null) {
+                        _scrollController.animateTo(
+                          index * 300.0,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    });
 
-              return ContainerSLiverList(products, state);
-            }
-            else if (state is EcommerceFailureState) {
-              return SliverToBoxAdapter(
-                child: Center(
-                  child: Column(
-                    children: [
-                      Text('Error: ${state.errMessage}'),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.read<EcommerceCubit>().fetchProduct(),
-                        child: const Text('Try Again'),
+                    return ContainerSLiverList(products, state);
+                  } else if (state is EcommerceFailureState) {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Text('Error: ${state.errMessage}'),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  context.read<EcommerceCubit>().fetchProduct(),
+                              child: const Text('Try Again'),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return SkeletonizerWidget();
-                }, childCount: 6),
-              );
-            }
-          },
+                    );
+                  } else {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return SkeletonizerWidget();
+                      }, childCount: 6),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 }
-
-
-
-

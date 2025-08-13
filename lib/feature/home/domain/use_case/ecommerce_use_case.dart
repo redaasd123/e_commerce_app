@@ -3,7 +3,7 @@ import 'package:e_commerce_app/core/errors/failure.dart';
 import 'package:e_commerce_app/feature/home/domain/repo/ecommerce_repo.dart';
 
 import '../../../../core/use_case/use_case.dart';
-import '../entity/cart_entity.dart';
+import '../entity/cart_entity/cart_entity.dart';
 
 class ECommerceUseCase extends UseCase<List<CartEntity>, int> {
   final ECommerceRepo eCommerceRepo;

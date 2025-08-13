@@ -1,12 +1,12 @@
-import 'package:e_commerce_app/core/param/delete_product_param.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/cart_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/cart_entity/cart_entity.dart';
 import 'package:e_commerce_app/feature/home/presentation/manager/add_product/add_product_cubit.dart';
-import 'package:e_commerce_app/feature/home/presentation/manager/delete_product/delete_cubit.dart';
+import 'package:e_commerce_app/feature/home/presentation/manager/delete_product/delete_product_cubit.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/detail_container_drop_down.dart';
+import 'package:e_commerce_app/feature/home/presentation/views/widget/param/add_product_param.dart';
+import 'package:e_commerce_app/feature/home/presentation/views/widget/param/delete_product_param.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/param/add_product_param.dart';
 import '../../manager/image_product_cubit/image_cubit.dart';
 
 class DetailContainerListView extends StatelessWidget {
@@ -23,11 +23,11 @@ class DetailContainerListView extends StatelessWidget {
       itemCount: cartEntity.products.length,
       itemBuilder: (context, index) {
         final product = cartEntity.products[index];
-        final Addparam = AddProductParam(
+        final AddProductparam = AddProductParam(
           cartId: cartEntity.id,
           products: [product],
         );
-        final deleteParam = DeleteProductParam(
+        final deleteProductParam = DeleteProductParam(
           id: cartEntity.id,
           product: [product],
         );
@@ -40,10 +40,10 @@ class DetailContainerListView extends StatelessWidget {
           description: product.title,
           onPressed: () {
             if (isAdded) {
-              BlocProvider.of<DeleteProductCubit>(context).deleteProduct(deleteParam);
+              BlocProvider.of<DeleteProductCubit>(context).deleteProduct(deleteProductParam);
               context.read<ImageProductCubit>().removeImageByUrl(product.thumbnail);
             }else {
-              BlocProvider.of<AddProductCubit>(context).addProduct(Addparam);
+              BlocProvider.of<AddProductCubit>(context).addProduct(AddProductparam);
               context.read<ImageProductCubit>().addImage(
                 product.thumbnail,
                 product.price,

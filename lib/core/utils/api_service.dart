@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-import '../errors/failure.dart';
-
 class Api {
   static final String _baseUrl = 'https://dummyjson.com/';
   final Dio dio;
@@ -25,9 +23,9 @@ class Api {
       );
       return response.data;
     } on DioException catch (e) {
-      throw ServerFailure.fromDioError(e);
+      throw e;
     } catch (e) {
-      throw ServerFailure(errMessage: e.toString());
+      throw Exception(e.toString());
     }
   }
 

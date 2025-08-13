@@ -1,4 +1,4 @@
-import 'package:e_commerce_app/feature/home/domain/entity/product_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/product_entity/product_entity.dart';
 
 class ECommerceModel extends ProductEntity {
   final List<Carts>? carts;

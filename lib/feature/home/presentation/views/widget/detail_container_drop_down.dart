@@ -1,12 +1,7 @@
 import 'package:e_commerce_app/core/utils/styles.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/cart_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/cart_entity/cart_entity.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/custom_button.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:e_commerce_app/core/utils/styles.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/cart_entity.dart';
-import 'package:e_commerce_app/feature/home/presentation/views/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class DetailContainerDropDown extends StatelessWidget {

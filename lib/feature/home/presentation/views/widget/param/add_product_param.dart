@@ -1,4 +1,5 @@
-import '../../feature/home/domain/entity/product_entity.dart';
+
+import '../../../../domain/entity/product_entity/product_entity.dart';
 
 class AddProductParam {
   final int cartId;

@@ -1,7 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../../../domain/entity/cart_entity.dart';
-import 'container_animated.dart';
+
+import '../../../domain/entity/cart_entity/cart_entity.dart';
+import 'container_animated_widget.dart';
 
 class CustomContainerWidget extends StatefulWidget {
   final CartEntity? cartEntity;
@@ -19,7 +19,6 @@ class CustomContainerWidget extends StatefulWidget {
 
 class _CustomContainerWidgetState extends State<CustomContainerWidget> {
   bool isExpanded = false;
-
 
   @override
   void initState() {
@@ -42,10 +41,7 @@ class _CustomContainerWidgetState extends State<CustomContainerWidget> {
       }
     }
   }
-  final AudioPlayer audioPlayer = AudioPlayer();
-  Future<void> playClickSound() async {
-    await audioPlayer.play(AssetSource('sound/pop_sound.mp3'));
-  }
+
   @override
   Widget build(BuildContext context) {
     final bool isSkeleton = widget.cartEntity == null;
@@ -88,7 +84,6 @@ class _CustomContainerWidgetState extends State<CustomContainerWidget> {
                         : IconButton(
                             onPressed: () {
                               setState(() {
-                                playClickSound();
                                 isExpanded = !isExpanded;
                               });
                             },
@@ -115,4 +110,3 @@ class _CustomContainerWidgetState extends State<CustomContainerWidget> {
     );
   }
 }
-

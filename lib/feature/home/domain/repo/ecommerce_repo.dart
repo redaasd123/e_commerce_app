@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:e_commerce_app/core/errors/failure.dart';
-import 'package:e_commerce_app/core/param/add_product_param.dart';
-import 'package:e_commerce_app/core/param/delete_product_param.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/cart_entity.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/product_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/cart_entity/cart_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/product_entity/product_entity.dart';
+
+import '../../presentation/views/widget/param/add_product_param.dart';
+import '../../presentation/views/widget/param/delete_product_param.dart';
 
 abstract class ECommerceRepo {
   Future<Either<Failure, List<CartEntity>>> fetchProduct({

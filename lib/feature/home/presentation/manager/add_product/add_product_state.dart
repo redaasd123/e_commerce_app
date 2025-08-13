@@ -1,19 +1,38 @@
 part of 'add_product_cubit.dart';
 
 @immutable
-sealed class AddProductState {}
+sealed class AddProductState extends Equatable {
+  const AddProductState();
+}
 
-final class AddProductInitial extends AddProductState {}
+final class AddProductInitial extends AddProductState {
+  const AddProductInitial();
 
-final class AddProductLoading extends AddProductState {}
+  @override
+  List<Object?> get props => [];
+}
+
+final class AddProductLoading extends AddProductState {
+  const AddProductLoading();
+
+  @override
+  List<Object?> get props => [];
+}
 
 final class AddProductFailureState extends AddProductState {
   final String errMessage;
 
-  AddProductFailureState({required this.errMessage});
+  @override
+  List<Object?> get props => [errMessage];
+
+  const AddProductFailureState({required this.errMessage});
 }
 
 final class AddProductSuccess extends AddProductState {
   final CartEntity cart;
-  AddProductSuccess({required this.cart});
+
+  @override
+  List<Object?> get props => [cart];
+
+ const  AddProductSuccess({required this.cart});
 }

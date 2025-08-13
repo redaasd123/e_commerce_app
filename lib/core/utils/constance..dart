@@ -1,0 +1,1 @@
+const kCatBox = 'catBox';

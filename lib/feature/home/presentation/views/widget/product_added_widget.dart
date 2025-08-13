@@ -5,8 +5,8 @@ import '../../../../../core/utils/styles.dart';
 import '../../../domain/entity/image_entity.dart';
 import 'circlerAvatar_lis_view.dart';
 
-class ProductAnimated extends StatelessWidget {
-  const ProductAnimated({
+class ProductAddedWidget extends StatelessWidget {
+  const ProductAddedWidget({
     super.key,
     required this.imageList,
   });

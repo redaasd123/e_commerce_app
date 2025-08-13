@@ -1,29 +1,44 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/ecommerce_use_case.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../../domain/entity/cart_entity.dart';
+import '../../domain/entity/cart_entity/cart_entity.dart';
 
 part 'ecommerce_state.dart';
 
 class EcommerceCubit extends Cubit<EcommerceState> {
   final ECommerceUseCase eCommerceUseCase;
+  final EcommerceLocalDataSource localDataSource;
 
-  //////////PageNation//////////////////
   final List<CartEntity> allProduct = [];
   bool isLoading = false;
   int currentPage = 0;
   bool hasReachedEnd = false;
 
-  ///////////////Search////////////////
   List<CartEntity> searchResults = [];
   bool isSearching = false;
 
-  EcommerceCubit(this.eCommerceUseCase) : super(EcommerceInitial());
+  EcommerceCubit(this.eCommerceUseCase, this.localDataSource)
+    : super(EcommerceInitial());
 
   Future<void> fetchProduct() async {
+    final cachedData = await localDataSource.fetchProduct();
+
+    if (currentPage == 0 && cachedData != null && cachedData.isNotEmpty) {
+      allProduct.addAll(cachedData);
+      emit(
+        EcommerceSuccessState(
+          cart: List.from(allProduct),
+          hasReachedEnd: false,
+          isLoadingMore: false,
+        ),
+      );
+    }
+
     if (isLoading || hasReachedEnd) return;
-    if (currentPage == 0) {
+    if (currentPage == 0 && allProduct.isEmpty) {
       emit(EcommerceLoadingState());
     }
 
@@ -34,7 +49,18 @@ class EcommerceCubit extends Cubit<EcommerceState> {
     result.fold(
       (failure) {
         isLoading = false;
-        emit(EcommerceFailureState(errMessage: failure.errMessage));
+
+        if (allProduct.isNotEmpty) {
+          emit(
+            EcommerceSuccessState(
+              cart: List.from(allProduct),
+              hasReachedEnd: true,
+              isLoadingMore: false,
+            ),
+          );
+        } else {
+          emit(EcommerceFailureState(errMessage: failure.errMessage));
+        }
       },
       (product) {
         if (product.isEmpty) {
@@ -77,13 +103,17 @@ class EcommerceCubit extends Cubit<EcommerceState> {
       _scrollToCartIndex = null;
       _openedCartId = null;
 
-      emit(
-        EcommerceSuccessState(
-          cart: allProduct,
-          hasReachedEnd: false,
-          isLoadingMore: false,
-        ),
-      );
+      if (state is EcommerceSuccessState) {
+        emit(
+          (state as EcommerceSuccessState).copyWith(
+            cart: allProduct,
+            hasReachedEnd: false,
+            isLoadingMore: false,
+            isSearching: false,
+            searchResults: [],
+          ),
+        );
+      }
     } else {
       final filtered = allProduct.where((cart) {
         return cart.products.any(
@@ -98,15 +128,17 @@ class EcommerceCubit extends Cubit<EcommerceState> {
 
       _openedCartId = filtered.isNotEmpty ? filtered.first.id : null;
 
-      emit(
-        EcommerceSuccessState(
-          cart: filtered,
-          hasReachedEnd: true,
-          isLoadingMore: false,
-          isSearching: true,
-          searchResults: filtered,
-        ),
-      );
+      if (state is EcommerceSuccessState) {
+        emit(
+          (state as EcommerceSuccessState).copyWith(
+            cart: filtered,
+            hasReachedEnd: true,
+            isLoadingMore: false,
+            isSearching: true,
+            searchResults: filtered,
+          ),
+        );
+      }
     }
   }
 }

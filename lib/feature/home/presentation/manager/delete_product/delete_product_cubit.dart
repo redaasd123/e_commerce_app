@@ -1,12 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:e_commerce_app/core/param/delete_product_param.dart';
-import 'package:e_commerce_app/feature/home/domain/entity/cart_entity.dart';
+import 'package:e_commerce_app/feature/home/domain/entity/cart_entity/cart_entity.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/delete_produc_use_case.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-part 'delete_state.dart';
+import '../../views/widget/param/delete_product_param.dart';
 
-class DeleteProductCubit extends Cubit<DeleteState> {
+part 'delete_product_state.dart';
+
+class DeleteProductCubit extends Cubit<DeleteProductState> {
   final DeleteProductUseCase deleteProductUseCase;
 
   DeleteProductCubit(this.deleteProductUseCase) : super(DeleteInitial());

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../../domain/entity/cart_entity.dart';
+import '../../../domain/entity/cart_entity/cart_entity.dart';
 import '../../manager/ecommerce_cubit.dart';
 import 'custom_container_widget.dart';
 
