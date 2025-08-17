@@ -1,6 +1,5 @@
 import 'package:e_commerce_app/feature/home/domain/entity/cart_entity/cart_entity.dart';
-import 'package:e_commerce_app/feature/home/presentation/manager/add_product/add_product_cubit.dart';
-import 'package:e_commerce_app/feature/home/presentation/manager/delete_product/delete_product_cubit.dart';
+import 'package:e_commerce_app/feature/home/presentation/manager/ecommerce_cubit.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/detail_container_drop_down.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/param/add_product_param.dart';
 import 'package:e_commerce_app/feature/home/presentation/views/widget/param/delete_product_param.dart';
@@ -40,10 +39,10 @@ class DetailContainerListView extends StatelessWidget {
           description: product.title,
           onPressed: () {
             if (isAdded) {
-              BlocProvider.of<DeleteProductCubit>(context).deleteProduct(deleteProductParam);
+              //BlocProvider.of<EcommerceCubit>(context).deleteProduct(deleteProductParam);
               context.read<ImageProductCubit>().removeImageByUrl(product.thumbnail);
             }else {
-              BlocProvider.of<AddProductCubit>(context).addProduct(AddProductparam);
+             // BlocProvider.of<EcommerceCubit>(context).addProduct(AddProductparam);
               context.read<ImageProductCubit>().addImage(
                 product.thumbnail,
                 product.price,

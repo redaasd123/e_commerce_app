@@ -7,8 +7,6 @@ import 'package:e_commerce_app/feature/home/domain/repo/ecommerce_repo.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/add_product_use_case.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/delete_produc_use_case.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/ecommerce_use_case.dart';
-import 'package:e_commerce_app/feature/home/presentation/manager/add_product/add_product_cubit.dart';
-import 'package:e_commerce_app/feature/home/presentation/manager/delete_product/delete_product_cubit.dart';
 import 'package:e_commerce_app/feature/home/presentation/manager/ecommerce_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -50,14 +48,9 @@ void setUpServiceLocator() {
         () => DeleteProductUseCase(eCommerceRepo: getIt()),
   );getIt.registerLazySingleton<EcommerceLocalDataSource>(()=>EcommerceLocalDataSourceImpl());  // Cubits
   getIt.registerFactory<EcommerceCubit>(
-        () => EcommerceCubit(getIt(), getIt.get()),
+        () => EcommerceCubit(getIt(), getIt.get(),getIt.get(),getIt.get()),
   );
-  getIt.registerFactory<AddProductCubit>(
-        () => AddProductCubit(getIt()),
-  );
-  getIt.registerFactory<DeleteProductCubit>(
-        () => DeleteProductCubit(getIt()),
-  );
+
   getIt.registerFactory<ImageProductCubit>(
         () => ImageProductCubit(),
   );

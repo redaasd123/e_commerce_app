@@ -1,10 +1,10 @@
 import 'package:e_commerce_app/core/save_data/save_data.dart';
 import 'package:e_commerce_app/core/utils/api_service.dart';
 import 'package:e_commerce_app/core/utils/constance..dart';
-import 'package:e_commerce_app/core/utils/sevice_locator.dart';
 import 'package:e_commerce_app/feature/home/data/model/e_commerce_model.dart';
 import 'package:e_commerce_app/feature/home/domain/entity/product_entity/product_entity.dart';
 
+import '../../../../core/utils/sevice_locator.dart';
 import '../../domain/entity/cart_entity/cart_entity.dart';
 import '../../presentation/views/widget/param/add_product_param.dart';
 import '../../presentation/views/widget/param/delete_product_param.dart';

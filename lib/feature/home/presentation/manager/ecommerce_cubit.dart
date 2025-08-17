@@ -1,16 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source.dart';
+import 'package:e_commerce_app/feature/home/domain/use_case/delete_produc_use_case.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/ecommerce_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../domain/entity/cart_entity/cart_entity.dart';
+import '../../domain/entity/image_entity.dart';
+import '../../domain/use_case/add_product_use_case.dart';
+import '../views/widget/param/add_product_param.dart';
+import '../views/widget/param/delete_product_param.dart';
 
 part 'ecommerce_state.dart';
 
 class EcommerceCubit extends Cubit<EcommerceState> {
   final ECommerceUseCase eCommerceUseCase;
   final EcommerceLocalDataSource localDataSource;
+  final AddProductUseCase addProductUseCase;
+  final DeleteProductUseCase deleteProductUseCase;
 
   final List<CartEntity> allProduct = [];
   bool isLoading = false;
@@ -20,8 +27,15 @@ class EcommerceCubit extends Cubit<EcommerceState> {
   List<CartEntity> searchResults = [];
   bool isSearching = false;
 
-  EcommerceCubit(this.eCommerceUseCase, this.localDataSource)
-    : super(EcommerceInitial());
+  final List<ImageEntity> _images = [];
+  List<ImageEntity> get images => List.unmodifiable(_images);
+
+  EcommerceCubit(
+    this.eCommerceUseCase,
+    this.localDataSource,
+    this.addProductUseCase,
+    this.deleteProductUseCase,
+  ) : super(EcommerceInitial());
 
   Future<void> fetchProduct() async {
     final cachedData = await localDataSource.fetchProduct();
@@ -81,6 +95,61 @@ class EcommerceCubit extends Cubit<EcommerceState> {
         );
       },
     );
+  }
+  Future<void> addProduct(AddProductParam param) async {
+    emit(AddProductLoading());
+
+    var result = await addProductUseCase.call(param);
+    result.fold(
+          (failure) => emit(AddProductFailureState(errMessage: failure.toString())),
+          (cart) {
+        allProduct.add(cart);
+
+        // ✅ أهم حاجة: نرجع EcommerceSuccessState بالليستة بعد التعديل
+        emit(
+          EcommerceSuccessState(
+            cart: List.from(allProduct),
+            hasReachedEnd: hasReachedEnd,
+            isLoadingMore: false,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteProduct(DeleteProductParam param) async {
+    emit(DeleteProductLoadingState());
+
+    var result = await deleteProductUseCase.call(param);
+    result.fold(
+          (failure) => emit(DeleteFailureState(errMessage: failure.errMessage)),
+          (cartEntity) {
+        allProduct.removeWhere((cart) => cart.id == cartEntity.id);
+
+        // ✅ نفس الكلام هنا: نرجع SuccessState بالليستة بعد الحذف
+        emit(
+          EcommerceSuccessState(
+            cart: List.from(allProduct),
+            hasReachedEnd: hasReachedEnd,
+            isLoadingMore: false,
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
+
+  void addImage(String url, num price) {
+    _images.add(ImageEntity(imageUrl: url, price: price));
+    emit(EcommerceImagesUpdated(List.from(_images))); // هنعمل state جديدة للصور
+  }
+
+  void removeImageByUrl(String url) {
+    _images.removeWhere((img) => img.imageUrl == url);
+    emit(EcommerceImagesUpdated(List.from(_images)));
   }
 
   void refresh() {
