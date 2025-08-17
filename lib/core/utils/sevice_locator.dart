@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source.dart';
-import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_remote_data_source.dart';
+import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source/ecommerce_local_data_source.dart';
+import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_remote_data_source/ecommerce_remote_data_source.dart';
 import 'package:e_commerce_app/feature/home/data/repos/ecommerce_impl.dart';
 import 'package:e_commerce_app/feature/home/domain/repo/ecommerce_repo.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/add_product_use_case.dart';

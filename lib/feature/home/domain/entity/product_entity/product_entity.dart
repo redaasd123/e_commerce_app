@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 part 'product_entity.g.dart';
 
 @HiveType(typeId: 1)
-class ProductEntity {
+class ProductEntity extends Equatable {
   @HiveField(0)
   final int id;
 
@@ -30,4 +31,7 @@ class ProductEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'title': title, 'thumbnail': thumbnail, 'price': price};
   }
+
+  @override
+  List<Object?> get props => [id, title, thumbnail, price];
 }

@@ -97,14 +97,14 @@ class Carts {
     totalProducts = json['totalProducts'];
     totalQuantity = json['totalQuantity'];
   }
-  num? id;
+  int? id;
   List<Products>? products;
   num? total;
   num? discountedTotal;
   num? userId;
   num? totalProducts;
   num? totalQuantity;
-Carts copyWith({  num? id,
+Carts copyWith({  int? id,
   List<Products>? products,
   num? total,
   num? discountedTotal,
@@ -156,7 +156,7 @@ class Products {
     discountedTotal = json['discountedTotal'];
     thumbnail = json['thumbnail'];
   }
-  num? id;
+  int? id;
   String? title;
   num? price;
   num? quantity;
@@ -164,7 +164,7 @@ class Products {
   num? discountPercentage;
   num? discountedTotal;
   String? thumbnail;
-Products copyWith({  num? id,
+Products copyWith({  int? id,
   String? title,
   num? price,
   num? quantity,

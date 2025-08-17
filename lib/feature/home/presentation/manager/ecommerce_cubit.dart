@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source.dart';
+import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source/ecommerce_local_data_source.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/delete_produc_use_case.dart';
 import 'package:e_commerce_app/feature/home/domain/use_case/ecommerce_use_case.dart';
 import 'package:equatable/equatable.dart';
@@ -104,8 +104,6 @@ class EcommerceCubit extends Cubit<EcommerceState> {
           (failure) => emit(AddProductFailureState(errMessage: failure.toString())),
           (cart) {
         allProduct.add(cart);
-
-        // ✅ أهم حاجة: نرجع EcommerceSuccessState بالليستة بعد التعديل
         emit(
           EcommerceSuccessState(
             cart: List.from(allProduct),
@@ -125,8 +123,6 @@ class EcommerceCubit extends Cubit<EcommerceState> {
           (failure) => emit(DeleteFailureState(errMessage: failure.errMessage)),
           (cartEntity) {
         allProduct.removeWhere((cart) => cart.id == cartEntity.id);
-
-        // ✅ نفس الكلام هنا: نرجع SuccessState بالليستة بعد الحذف
         emit(
           EcommerceSuccessState(
             cart: List.from(allProduct),
@@ -144,8 +140,7 @@ class EcommerceCubit extends Cubit<EcommerceState> {
 
   void addImage(String url, num price) {
     _images.add(ImageEntity(imageUrl: url, price: price));
-    emit(EcommerceImagesUpdated(List.from(_images))); // هنعمل state جديدة للصور
-  }
+    emit(EcommerceImagesUpdated(List.from(_images))); }
 
   void removeImageByUrl(String url) {
     _images.removeWhere((img) => img.imageUrl == url);

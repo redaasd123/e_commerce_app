@@ -28,7 +28,7 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.only(top: 0, left: 4.0, right: 4.0, bottom: 4.0),
       child: TextField(
         controller: _controller,
         onChanged: widget.onChanged,
