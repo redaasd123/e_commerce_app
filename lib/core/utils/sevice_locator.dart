@@ -26,7 +26,7 @@ void setUpServiceLocator() {
   // Data Sources
 
   getIt.registerLazySingleton<ECommerceDataSource>(
-        () => ECommerceDataSourceImpl(),
+        () => ECommerceDataSourceImpl(ecommerceLocalDataSource: getIt.get()),
   );
 
   // Repository

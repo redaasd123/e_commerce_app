@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
-import '../../../domain/entity/product_entity/product_entity.dart';
+import '../../../../domain/entity/product_entity/product_entity.dart';
 
+part 'product_cash_model.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 3)
 class ProductCacheModel {
   @HiveField(0)
   final int id;

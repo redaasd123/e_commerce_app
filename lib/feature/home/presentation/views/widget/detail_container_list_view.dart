@@ -1,4 +1,5 @@
 import 'package:e_commerce_app/core/connectivity/check_internet_cubit.dart';
+import 'package:e_commerce_app/core/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,16 +15,27 @@ class DetailContainerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageCubit = context.watch<ImageProductCubit>();
+    final isConnected = context.watch<CheckInternetCubit>().state
+    is ConnectivityConnected;
 
-    return BlocBuilder<CheckInternetCubit, CheckInternetState>(
-      builder: (context, internetState) {
-        if (internetState is ConnectivityDisconnected) {
-          return const Center(
-            child: Text("⚠️ لا يوجد اتصال بالإنترنت"),
-          );
-        }
+    return Column(
+      children: [
+        BlocBuilder<CheckInternetCubit, CheckInternetState>(
+          builder: (context, internetState) {
+            if (internetState is ConnectivityDisconnected) {
+              return const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "⚠️ لا يوجد اتصال بالإنترنت",
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
 
-        return ListView.builder(
+        ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: cartEntity.products.length,
@@ -32,11 +44,19 @@ class DetailContainerListView extends StatelessWidget {
             final isAdded = imageCubit.state.any(
                   (img) => img.imageUrl == product.thumbnail,
             );
+
             return DetailContainerDropDown(
               cartEntity: cartEntity,
               imageUrl: product.thumbnail,
               description: product.title,
+              isAdded: isAdded,
               onPressed: () {
+                if (!isConnected) {
+
+                showSnackBar(context, 'No Internet Connection', Colors.red);
+                  return;
+                }
+
                 if (isAdded) {
                   context.read<ImageProductCubit>().removeImageByUrl(
                     product.thumbnail,
@@ -48,11 +68,10 @@ class DetailContainerListView extends StatelessWidget {
                   );
                 }
               },
-              isAdded: isAdded,
             );
           },
-        );
-      },
+        ),
+      ],
     );
   }
 }

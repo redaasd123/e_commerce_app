@@ -12,10 +12,9 @@ import 'package:e_commerce_app/feature/home/domain/repo/ecommerce_repo.dart';
 import 'package:hive/hive.dart';
 
 import '../../domain/entity/cart_entity/cart_entity.dart';
-import '../../domain/entity/product_entity/product_entity.dart';
 import '../../presentation/views/widget/param/add_product_param.dart';
 import '../../presentation/views/widget/param/delete_product_param.dart';
-import '../data_source/ecommerce_local_data_source/cart_cash_model.dart';
+import '../data_source/ecommerce_local_data_source/cart_cash_model/cart_cash_model.dart';
 
 class ECommerceRepoImpl extends ECommerceRepo {
   final ECommerceDataSource eCommerceDataSource;
@@ -36,20 +35,17 @@ class ECommerceRepoImpl extends ECommerceRepo {
 
     try {
       if (isConnected) {
-        // جلب البيانات من السيرفر
         final result = await eCommerceDataSource.fetchProduct(
           limit: limit,
           skip: skip,
         );
 
-        // تحويل النتائج للكاش وتخزينها في Hive
         final cacheList =
         result.map((cart) => CartCacheModel.fromEntity(cart)).toList();
         await ecommerceLocalDataSource.saveCarts(cacheList);
 
         return Right(result);
       } else {
-        // لو مفيش نت، جلب البيانات من الكاش
         final cachedData = await ecommerceLocalDataSource.fetchProduct();
         if (cachedData.isNotEmpty) {
           return Right(cachedData);
@@ -58,7 +54,6 @@ class ECommerceRepoImpl extends ECommerceRepo {
         }
       }
     } on DioException catch (e) {
-      // لو حصل خطأ في API
       final cachedData = await ecommerceLocalDataSource.fetchProduct();
       if (cachedData.isNotEmpty) return Right(cachedData);
 
