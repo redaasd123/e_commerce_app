@@ -1,5 +1,6 @@
 import 'package:e_commerce_app/feature/home/data/data_source/ecommerce_local_data_source/product_cash_model/product_cash_model.dart';
 import 'package:hive/hive.dart';
+
 import '../../../../domain/entity/cart_entity/cart_entity.dart';
 import '../../../model/e_commerce_model.dart';
 
@@ -21,6 +22,7 @@ class CartCacheModel {
       products: products.map((e) => e.toEntity()).toList(),
     );
   }
+
   factory CartCacheModel.fromEntity(CartEntity entity) {
     return CartCacheModel(
       id: entity.id,
@@ -40,9 +42,6 @@ class CartCacheModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'products': products.map((e) => e.toJson()).toList(),
-    };
+    return {'id': id, 'products': products.map((e) => e.toJson()).toList()};
   }
 }

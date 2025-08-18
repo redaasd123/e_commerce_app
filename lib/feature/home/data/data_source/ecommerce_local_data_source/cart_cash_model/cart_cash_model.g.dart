@@ -2,10 +2,6 @@
 
 part of 'cart_cash_model.dart';
 
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
 class CartCacheModelAdapter extends TypeAdapter<CartCacheModel> {
   @override
   final int typeId = 2;
