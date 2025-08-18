@@ -2,7 +2,6 @@ import 'package:e_commerce_app/core/connectivity/check_internet_cubit.dart';
 import 'package:e_commerce_app/core/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../manager/image_product_cubit/image_cubit.dart';
 import 'detail_container_drop_down.dart';
 import '../../../domain/entity/cart_entity/cart_entity.dart';

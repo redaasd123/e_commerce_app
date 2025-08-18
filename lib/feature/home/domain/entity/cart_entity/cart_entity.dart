@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:hive/hive.dart';
 
 import '../product_entity/product_entity.dart';
 
