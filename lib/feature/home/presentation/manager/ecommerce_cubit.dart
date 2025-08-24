@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 
 import '../../domain/entity/cart_entity/cart_entity.dart';
 import '../../domain/entity/image_entity.dart';
+import '../../domain/entity/product_entity/product_entity.dart';
 import '../../domain/use_case/add_product_use_case.dart';
 import '../views/widget/param/add_product_param.dart';
 import '../views/widget/param/delete_product_param.dart';
@@ -31,29 +32,50 @@ class EcommerceCubit extends Cubit<EcommerceState> {
   List<ImageEntity> get images => List.unmodifiable(_images);
 
   EcommerceCubit(
-    this.eCommerceUseCase,
-    this.localDataSource,
-    this.addProductUseCase,
-    this.deleteProductUseCase,
-  ) : super(EcommerceInitial());
+      this.eCommerceUseCase,
+      this.localDataSource,
+      this.addProductUseCase,
+      this.deleteProductUseCase,
+      ) : super(EcommerceInitial());
 
-  Future<void> fetchProduct() async {
-    final cachedData = await localDataSource.fetchProduct();
 
-    if (currentPage == 0 && cachedData != null && cachedData.isNotEmpty) {
-      allProduct.addAll(cachedData);
-      emit(
-        EcommerceSuccessState(
+
+
+  Future<void> fetchProduct({bool refresh = false}) async {
+    if (isLoading) {
+      return;
+    }
+
+    if (refresh) {
+      allProduct.clear();
+      currentPage = 0;
+      hasReachedEnd = false;
+    }
+
+    if (currentPage == 1 && allProduct.isEmpty) {
+      final cachedData = await localDataSource.fetchProduct();
+      if (cachedData.isNotEmpty) {
+        allProduct.addAll(cachedData);
+        emit(EcommerceSuccessState(
           cart: List.from(allProduct),
           hasReachedEnd: false,
           isLoadingMore: false,
-        ),
-      );
+        ));
+      }
     }
 
-    if (isLoading || hasReachedEnd) return;
-    if (currentPage == 0 && allProduct.isEmpty) {
+    if (hasReachedEnd) {
+      return;
+    }
+
+    if (currentPage == 1 && allProduct.isEmpty) {
       emit(EcommerceLoadingState());
+    } else {
+      emit(EcommerceSuccessState(
+        cart: List.from(allProduct),
+        hasReachedEnd: hasReachedEnd,
+        isLoadingMore: true,
+      ));
     }
 
     isLoading = true;
@@ -61,49 +83,50 @@ class EcommerceCubit extends Cubit<EcommerceState> {
     final result = await eCommerceUseCase.call(currentPage);
 
     result.fold(
-      (failure) {
+          (failure) {
+        isLoading = false;
+        emit(EcommerceFailureState(
+          errMessage: failure.errMessage,
+          oldData: List.from(allProduct),
+        ));
+      },
+
+      (product) {
         isLoading = false;
 
-        if (allProduct.isNotEmpty) {
-          emit(
-            EcommerceSuccessState(
-              cart: List.from(allProduct),
-              hasReachedEnd: true,
-              isLoadingMore: false,
-            ),
-          );
-        } else {
-          emit(EcommerceFailureState(errMessage: failure.errMessage));
-        }
-      },
-      (product) {
         if (product.isEmpty) {
           hasReachedEnd = true;
         } else {
           currentPage++;
-          allProduct.addAll(product);
+
+          final uniqueProducts = product.where(
+                (newItem) => !allProduct.any((old) => old.id == newItem.id),
+          );
+
+          allProduct.addAll(uniqueProducts);
         }
 
-        isLoading = false;
-
-        emit(
-          EcommerceSuccessState(
-            cart: List.from(allProduct),
-            hasReachedEnd: hasReachedEnd,
-            isLoadingMore: false,
-          ),
-        );
+        emit(EcommerceSuccessState(
+          cart: List.from(allProduct),
+          hasReachedEnd: hasReachedEnd,
+          isLoadingMore: false,
+        ));
       },
     );
   }
+
+
   Future<void> addProduct(AddProductParam param) async {
     emit(AddProductLoading());
 
     var result = await addProductUseCase.call(param);
     result.fold(
-          (failure) => emit(AddProductFailureState(errMessage: failure.toString())),
+          (failure) =>
+          emit(AddProductFailureState(errMessage: failure.toString())),
           (cart) {
-        allProduct.add(cart);
+        if (!allProduct.any((c) => c.id == cart.id)) {
+          allProduct.add(cart);
+        }
         emit(
           EcommerceSuccessState(
             cart: List.from(allProduct),
@@ -134,13 +157,10 @@ class EcommerceCubit extends Cubit<EcommerceState> {
     );
   }
 
-
-
-
-
   void addImage(String url, num price) {
     _images.add(ImageEntity(imageUrl: url, price: price));
-    emit(EcommerceImagesUpdated(List.from(_images))); }
+    emit(EcommerceImagesUpdated(List.from(_images)));
+  }
 
   void removeImageByUrl(String url) {
     _images.removeWhere((img) => img.imageUrl == url);
@@ -148,18 +168,13 @@ class EcommerceCubit extends Cubit<EcommerceState> {
   }
 
   void refresh() {
-    allProduct.clear();
-    currentPage = 0;
-    hasReachedEnd = false;
-    fetchProduct();
+    fetchProduct(refresh: true);
   }
 
   int? _scrollToCartIndex;
-
   int? get scrollToCartIndex => _scrollToCartIndex;
 
   int? _openedCartId;
-
   int? get openedCartId => _openedCartId;
 
   void searchProduct(String query) {
@@ -181,15 +196,13 @@ class EcommerceCubit extends Cubit<EcommerceState> {
     } else {
       final filtered = allProduct.where((cart) {
         return cart.products.any(
-          (product) =>
+              (product) =>
               product.title.toLowerCase().contains(query.toLowerCase()),
         );
       }).toList();
 
-      _scrollToCartIndex = filtered.isNotEmpty
-          ? allProduct.indexOf(filtered.first)
-          : null;
-
+      _scrollToCartIndex =
+      filtered.isNotEmpty ? allProduct.indexOf(filtered.first) : null;
       _openedCartId = filtered.isNotEmpty ? filtered.first.id : null;
 
       if (state is EcommerceSuccessState) {
