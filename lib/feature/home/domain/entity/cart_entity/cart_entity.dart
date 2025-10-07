@@ -8,7 +8,7 @@ class CartEntity extends Equatable {
   final int id;
   final List<ProductEntity> products;
 
-  CartEntity({required this.id, required this.products});
+ const CartEntity({required this.id, required this.products});
 
   @override
   List<Object?> get props => [id, products];
