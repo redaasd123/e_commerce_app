@@ -1,16 +1,34 @@
-# e_commerce_app
+# 🛍️ E-Commerce App
 
-A new Flutter project.
+A modern Flutter E-Commerce application that allows users to **add**, **delete**, and **view products** with smooth pagination and internet connection handling.
 
-## Getting Started
+## 🚀 Features
 
-This project is a starting point for a Flutter application.
+- 🧩 **Add Product:** Add new products with all necessary details.
+- 🗑️ **Delete Product:** Easily remove products from the list.
+- 📜 **Pagination:** Load products efficiently page by page.
+- 🌐 **Internet Connection Handling:** Detects and manages network status gracefully.
+- 💎 **Clean UI:** Modern and user-friendly interface.
+- ⚙️ **Flutter + BLoC Architecture:** Organized and scalable project structure.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📸 Screenshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Add Product | Product List | E-Commerce Home |
+|--------------|---------------|----------------|
+| ![Add Product](assets/images/addedproduct.jpeg) | ![Product List](assets/images/listview.jpeg) | ![E-Commerce Home](assets/images/ecommerce.jpeg) |
+
+---
+
+## 🧠 Technologies Used
+
+- **Flutter** 💙
+- **Dart**
+- **BLoC / Cubit State Management**
+- **HTTP / Dio for APIs**
+- **Connectivity Plus** for internet detection
+
+---
+
+## 🛠️ Getting Started
